@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="孟卉工作台">
+<title>孟卉工作台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#2d5a3d;--a:#c0392b;--g:#b8860b;--bg:#f5f0eb;--card:#fff;--t:#2c2c2c;--tl:#999;--bd:#e8ddd0;--sb:env(safe-area-inset-bottom,0px)}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;background:var(--bg);color:var(--t);-webkit-tap-highlight-color:transparent;padding-bottom:calc(64px + var(--sb));-webkit-font-smoothing:antialiased}
+
+/* Header */
+.hd{background:var(--p);color:#fff;padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));position:sticky;top:0;z-index:50}
+.hd-r{display:flex;justify-content:space-between;align-items:center}
+.hd-t{font-size:17px;font-weight:700}
+.hd-s{font-size:11px;opacity:.8;margin-top:2px}
+.hd-d{font-size:12px;opacity:.85;text-align:right;line-height:1.5}
+
+/* Stats */
+.st{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.st::-webkit-scrollbar{display:none}
+.st-i{flex-shrink:0;background:var(--card);border-radius:10px;padding:8px 12px;min-width:64px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.st-v{font-size:20px;font-weight:700}
+.st-l{font-size:10px;color:var(--tl);margin-top:1px}
+
+/* Progress */
+.pg{padding:0 16px 8px}
+.pg-r{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.pg-l{font-size:11px;width:62px;flex-shrink:0;color:var(--tl)}
+.pg-b{flex:1;height:5px;background:#e0d8cc;border-radius:3px;overflow:hidden}
+.pg-f{height:100%;border-radius:3px;transition:width .3s}
+.pg-n{font-size:11px;color:var(--tl);width:34px;text-align:right}
+
+/* Chips */
+.ch{display:flex;gap:6px;padding:0 16px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ch::-webkit-scrollbar{display:none}
+.ch-i{flex-shrink:0;padding:5px 12px;border-radius:14px;font-size:12px;background:var(--card);border:1px solid var(--bd);white-space:nowrap;cursor:pointer;user-select:none;transition:all .12s}
+.ch-i.on{background:var(--p);color:#fff;border-color:var(--p)}
+
+/* Search */
+.sr{padding:0 16px 8px}
+.sr input{width:100%;padding:9px 14px;border-radius:10px;border:1px solid var(--bd);font-size:14px;outline:none;background:var(--card)}
+.sr input:focus{border-color:var(--p)}
+
+/* List */
+.ls{padding:0 16px}
+.it{background:var(--card);border-radius:12px;padding:12px;margin-bottom:7px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;position:relative;transition:transform .1s}
+.it:active{transform:scale(.98)}
+.it-t{display:flex;align-items:flex-start;gap:10px}
+.ck{width:22px;height:22px;border-radius:50%;flex-shrink:0;margin-top:1px;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ck.d{background:var(--p);border-color:var(--p)}
+.ck.d:after{content:'✓';color:#fff;font-size:12px}
+.it-i{flex:1;min-width:0}
+.it-tt{font-size:14px;font-weight:600;line-height:1.35}
+.it-hk{font-size:12px;color:var(--tl);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.it-m{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;align-items:center}
+.bg{display:inline-block;padding:1px 7px;border-radius:7px;font-size:10px;font-weight:600}
+.bs{background:#e3f2fd;color:#1565c0}
+.bl{background:#fce4ec;color:#c62828}
+.bd{background:#e8f5e9;color:#2e7d32}
+.bp{background:#fff3e0;color:#e65100}
+.mt{font-size:10px;color:var(--tl)}
+.it-a{position:absolute;right:10px;top:10px;display:flex;gap:3px}
+.ab{width:26px;height:26px;border-radius:7px;border:1px solid var(--bd);background:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Modal */
+.mm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;justify-content:center;align-items:flex-end}
+.mm.s{display:flex}
+.mb{background:#fff;border-radius:16px 16px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:18px 16px;padding-bottom:calc(18px + var(--sb));-webkit-overflow-scrolling:touch}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.mt2{font-size:17px;font-weight:700;flex:1;padding-right:10px;line-height:1.4}
+.mc{background:none;border:none;font-size:24px;cursor:pointer;color:#999;padding:0 4px;flex-shrink:0}
+.mbd{background:#f9f7f4;border-radius:10px;padding:14px;white-space:pre-wrap;font-size:14px;line-height:1.75;max-height:45vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ma{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.bn{padding:9px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .12s}
+.bp2{background:var(--p);color:#fff}
+.bo2{background:#fff;border:2px solid var(--p);color:var(--p)}
+.bs2{padding:6px 12px;font-size:12px}
+
+/* Nav */
+.nv{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;border-top:1px solid var(--bd);z-index:50;padding-bottom:var(--sb)}
+.ni{flex:1;text-align:center;padding:7px 4px;cursor:pointer;font-size:10px;color:var(--tl);transition:color .12s}
+.ni .ni-i{font-size:18px;display:block;margin-bottom:1px}
+.ni.on{color:var(--p);font-weight:600}
+
+/* Empty */
+.em2{text-align:center;padding:36px 20px;color:var(--tl)}
+.em2 .ei{font-size:36px;margin-bottom:6px}
+
+/* Toast */
+.ts{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:9px 18px;border-radius:10px;font-size:13px;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none}
+.ts.s{opacity:1}
+
+/* Count */
+.ct{font-size:11px;color:var(--tl);padding:0 16px 5px}
+</style>
+</head>
+<body>
+
+<div class="hd">
+<div class="hd-r">
+<div>
+<div class="hd-t">📋 孟卉工作台</div>
+<div class="hd-s">明亚保险经纪 · 养老规划垂直赛道</div>
+</div>
+<div class="hd-d" id="hdDate"></div>
+</div>
+</div>
+
+<div class="st" id="stRow"></div>
+<div class="pg" id="pgRow"></div>
+<div class="ch" id="catCh"></div>
+<div class="ch" id="tagCh"></div>
+<div class="sr"><input type="text" placeholder="🔍 搜索选题或口播稿..." id="srInp"></div>
+<div class="ct" id="ctEl"></div>
+<div class="ls" id="lsEl"></div>
+
+<div class="mm" id="mmMask">
+<div class="mb" id="mmBox"></div>
+</div>
+
+<div class="nv" id="nvBar"></div>
+<div class="ts" id="tsEl"></div>
+
+<script>
+// ========== DATA (embedded, no server needed) ==========
+var SCRIPTS = [
+{"id":"t1","title":"金税四期来了！你公司还按最低基数交社保？","type":"short","category":"热点追踪","duration":"55s","hook":"月薪一万按四千交社保？金税四期上线后，这种操作直接触预警！","tags":["金税四期","社保基数","热点"],"script":"【开头 - 热点切入】\n2026年7月，金税四期全面运行。\n人社、税务、银行数据全部打通，系统自动比对你的工资流水和社保基数。\n差异超过10%？直接预警，稽查上门。\n\n【痛点展开】\n以前很多公司的操作：你月薪1万，按当地最低基数4000交社保。\n公司省了钱，但你个人账户也少存了，未来退休金直接缩水。\n按4000交和按10000交，退休金差距能到每月2000+。\n\n现在新规明确：基本工资、绩效、加班费全部纳入缴费基数。\n想偷工减料？系统不答应。\n\n【对你的影响】\n如果你公司一直按最低基数交社保，恭喜你——接下来你的社保基数会涨，到手工资可能变少，但退休金会多。\n短痛换长稳，值。\n\n【行动号召】\n想知道你现在的社保基数对不对？评论区：月收入+所在城市，我帮你查！","status":"todo","inToday":true},
+{"id":"t2","title":"2026养老金调整通知还没发，怎么回事？","type":"short","category":"政策解读","duration":"60s","hook":"7月都过完了，2026年养老金调整通知还没出来！到底还涨不涨？","tags":["养老金调整","政策","热点"],"script":"【开头 - 悬念】\n7月都快过完了，1.5亿退休人员等了一个月的2026年养老金调整通知——还没发。\n去年7月10日就出了，今年怎么迟到了？\n\n【分析原因】\n三种可能：\n1. 调整方案有重大变化，内部还在博弈\n2. 经济数据和财政预算需要重新核算\n3. 配合十五五规划一起发布\n\n但别慌——迟到不等于不涨。历史上最晚的一次8月才发，补发一分不少。\n\n【关键信息】\n人社部7月9日发了《十五五规划》，明确提出完善养老金调整机制。\n这个完善二字，暗示今年的调整方式可能有变化。\n\n【你的应对】\n退休的：耐心等，补发不会少。\n没退休的：别指望社保涨幅能跑赢通胀，自己存商业养老金才是正道。\n\n👉 评论区：你退休了吗？你觉得今年涨多少？","status":"todo","inToday":true},
+{"id":"t3","title":"社保基金二季度调仓曝光！你的养老金在炒股？","type":"short","category":"冷知识","duration":"50s","hook":"你的养老金不是躺在银行里的，它在炒股！二季度调仓路径刚曝光。","tags":["社保基金","投资","冷知识"],"script":"【开头 - 冷知识】\n你以为你交的养老金躺在银行吃利息？\n错！你的养老金在炒股。\n\n【数据展开】\n人社部刚亮出社保家底：截至6月底，全国基本养老保险参保人数10.76亿。\n社保基金二季度调仓路径曝光——新进和增持了工程机械、医疗设备等板块。\n\n这说明什么？社保基金在用你的钱做长期投资，赚了钱来发养老金。\n这也是为什么社保基金能持续运转——不是只靠年轻人交钱，还有投资收益。\n\n【跟你有什么关系？】\n社保基金投资赚了，你的养老金才更有保障。\n但投资有波动，社保基金也有亏的年份。\n所以别把全部身家压在社保上——它保底，但不保全。\n\n👉 想了解社保+商保怎么搭配？评论区扣搭配！","status":"todo","inToday":true},
+{"id":"t4","title":"你的退休金够不够？一个公式算清楚","type":"short","category":"算账型","duration":"55s","hook":"别猜了，退休金够不够用一个公式就能算。今天教你算！","tags":["替代率","算账","养老规划"],"script":"【开头 - 直给】\n退休金够不够用？别凭感觉，今天教你一个公式，自己算。\n\n【公式拆解】\n养老金替代率 = 退休后月收入 ÷ 退休前月收入\n\n国际公认体面退休的替代率是55%-60%。\n也就是说，你退休前月入1万，退休后至少要有5500-6000，才够维持基本生活。\n\n中国目前平均替代率只有40%-45%。\n你退休前月入1万，退休后社保只给4000-4500。\n\n【缺口计算】\n你的缺口 = 退休前月收入 × (55% - 45%) = 1000元/月\n20年退休生活 = 缺口24万\n\n这24万从哪来？只有三个来源：存款、理财收益、商业养老金。\n\n【行动号召】\n想知道你的替代率是多少？评论区：当前月收入+预期退休年龄，我帮你算缺口！","status":"todo","inToday":true},
+{"id":"t5","title":"增额寿要停售了？别被焦虑营销骗了","type":"short","category":"避坑指南","duration":"50s","hook":"又有人说增额寿要停售了？先别急着抢，听我说完再决定。","tags":["增额寿","停售","避坑"],"script":"【开头 - 反套路】\n增额寿要停售了！再不买就来不及了！\n这句话你今年听过几次了？\n\n【真相】\n增额寿不会全部停售，只是个别产品因为定价利率调整而下架。\n旧产品下架，新产品上架，这是正常的产品迭代。\n利率下行时代，确实新产品收益可能不如老产品，但差距没有销售说的那么夸张。\n\n【避坑三问】\n听到停售先问自己：\n1. 我是真的需要，还是被焦虑驱动？\n2. 这款产品适合我吗，还是销售为了清库存？\n3. 如果不停售，我还会买吗？\n\n【结论】\n好产品永远有，不用抢。规划比产品重要，方案比停售重要。\n\n👉 评论区扣增额寿，我帮你客观对比当前在售的TOP5产品！","status":"todo","inToday":true},
+{"id":"t6","title":"35岁还没交社保？现在补回来要花多少","type":"short","category":"算账型","duration":"55s","hook":"35岁一次没交过社保？现在补还来得及，但成本你得心里有数。","tags":["灵活就业","社保补缴","算账"],"script":"【开头 - 痛点】\n有个粉丝私信我：35岁了，自由职业，一次社保没交过。现在慌了，还能补吗？\n\n【算账】\n能补，但有条件。目前大部分城市不允许跨年补缴职工社保，只能从现在开始交。\n\n以灵活就业身份交职工养老：\n- 按最低基数，每月约800-1200（各地不同）\n- 交满15年，到50岁刚好\n- 退休后每月大概领1500-2000\n\n如果按中等基数交：\n- 每月约1500-2000\n- 15年总投入约27-36万\n- 退休后每月大概领2500-3500\n\n【关键提醒】\n越早交越好。35岁开始刚好卡在15年线上，再晚就来不及了。\n\n👉 你的社保交了几年了？评论区：年龄+已交年限，我帮你算还差多少！","status":"todo","inToday":true},
+{"id":"t7","title":"父母50岁没养老金，现在买商业保险来得及吗？","type":"short","category":"方案型","duration":"55s","hook":"爸妈50岁了没养老金，现在买商业养老还来得及吗？三个方案你选！","tags":["父母养老","方案","50岁"],"script":"【开头 - 高频问题】\n被问最多的问题之一：爸妈50了，没养老金，现在买商业养老来得及吗？\n\n【方案分析】\n来得及，但选项有限。三个方案：\n\n方案一：趸交养老年金\n一次性交一笔钱，60岁开始领。\n优势：简单直接。劣势：门槛高，20万起步。\n\n方案二：5年交增额寿\n每年交5万，交5年，60岁后灵活取用。\n优势：灵活。劣势：取完就没了，不是终身。\n\n方案三：居民养老+商业补充\n先补上居民养老（最低档也要有），再配一份小额年金。\n优势：门槛低。劣势：金额有限。\n\n【建议】\n预算充足选方案一，预算有限选方案三。\n方案二适合不确定什么时候要用钱的家庭。\n\n👉 评论区：父母年龄+你的预算，我帮你匹配方案！","status":"todo","inToday":true},
+{"id":"t8","title":"养老年金vs把钱存银行，30年后差距有多大？","type":"short","category":"对比","duration":"60s","hook":"同样存100万，一个放银行一个买年金，30年后差距让你不敢相信。","tags":["年金vs存款","对比","算账"],"script":"【开头 - 对比悬念】\n同样100万，一个存银行，一个买养老年金，30年后差距有多大？今天算给你看。\n\n【银行方案】\n100万存银行，按当前3年期定存2.5%算（实际还会降）：\n30年后本息合计约210万。\n但这是一次性的钱，花完就没了。\n每月花5000，35年花完。\n\n【年金方案】\n100万买养老年金（30岁趸交，60岁领）：\n60岁开始每月领约8000-9000，活多久领多久。\n到80岁总共领约200万，到90岁总共领约290万。\n而且这笔钱雷打不动，不受市场波动影响。\n\n【核心差异】\n银行：钱越花越少，总担心花完。\n年金：钱永远到账，不用担心长寿风险。\n\n👉 想知道你的年龄存多少能领多少？评论区：年龄+金额，我帮你算！","status":"todo","inToday":true},
+{"id":"t9","title":"一个人养老到底需要多少钱？3个城市差距巨大","type":"short","category":"算账型","duration":"50s","hook":"同样是养老，北京要400万，成都只要150万？你的城市要多少？","tags":["养老成本","城市对比","数据"],"script":"【开头 - 数据冲击】\n一个人养老到底需要多少钱？\n我算了三个城市，差距大到你想不到。\n\n【城市对比】\n北京：月均开销6000（含医疗），20年=144万。算上通胀和医疗递增，实际需要350-400万。\n成都：月均开销4000，20年=96万。实际需要120-150万。\n县城：月均开销2500，20年=60万。实际需要70-90万。\n\n差距在哪？\n1. 生活成本：一线城市吃喝住行都贵\n2. 医疗费用：大城市看病贵但资源好\n3. 护理费用：一线城市请护工每月6000+，县城2000+\n\n【你的对策】\n大城市赚钱大城市花，退休后可以考虑降维养老——一线城市挣钱，二三线城市养老。\n但前提是：你得先存够那个数。\n\n👉 评论区：你打算在哪养老？我帮你算需要存多少！","status":"todo","inToday":true},
+{"id":"t10","title":"我为什么劝你不要等有钱了再规划养老","type":"short","category":"情感共鸣","duration":"50s","hook":"等有钱了再规划养老？这句话害了多少人。今天说点扎心的。","tags":["养老规划","复利","情感"],"script":"【开头 - 扎心】\n等我有钱了再规划养老。\n这句话我听了无数次。说这话的人，10年后大概率还是没钱。\n\n【为什么不能等】\n第一，复利不等人。\n30岁每月存1000，到60岁是36万本金+复利。\n40岁每月存1000，到60岁只有24万本金+复利。\n差了10年，差了不止一倍。\n\n第二，收入不等人。\n35-45岁是收入巅峰期，过了50岁收入大概率下降。\n你总觉得以后会更有钱，但身体和时间不答应。\n\n第三，保费不等人。\n年龄越大，同样的养老金领同样多，要交的保费越多。\n40岁买和50岁买，同样60岁领5000/月，保费差30%-50%。\n\n【金句】\n养老规划不是有钱人的专利，是普通人的刚需。\n你现在每月能存500，就比等有钱了再说强100倍。\n\n👉 评论区：你现在每月能存多少？我帮你看看能规划到什么程度！","status":"todo","inToday":true},
+{"id":"t11","title":"一个45岁女客户跟我说：我不想老了以后看任何人脸色","type":"long","category":"故事驱动","duration":"5min","hook":"她坐在我对面说这句话的时候，眼圈是红的。这期我讲一个真实客户的故事。","tags":["全职妈妈","女性养老","真实案例","情感"],"script":"【开场 - 情绪切入（0:00-0:40）】\n上周有个客户来找我，45岁，全职妈妈，做了15年。\n她坐在我对面，说了一句让我心里一紧的话：\n孟卉，我不想老了以后，看任何人的脸色。\n\n她眼圈是红的。她说她老公其实对她不差，但她越来越慌——\n她没有自己的社保，没有工资流水，名下没有资产。\n她每天忙得像个陀螺，但在这个社会的评价体系里，她什么都没做。\n\n我当时没急着给她推产品。我先问她：你最怕什么？\n她说：我最怕老了以后，连买件衣服都要张口要钱。\n\n【第一段 - 算账刺痛（0:40-2:00）】\n我给她算了一笔账。\n她老公月入2万，如果60岁退休，社保养老金大概8000-9000。\n但那是她老公的。按现行法律，退休金属于个人财产，不是夫妻共同财产。\n\n她自己呢？15年没工作，社保断断续续，居民养老按最低档交的。\n60岁以后，她每月能领的，大概只有600-800块。\n\n600块。在一个三线城市，连基本生活费都不够。\n她不是没有劳动能力，她是把劳动能力全部献给了家庭。\n但养老金体系，不认家庭劳动这四个字。\n\n我看着她，说：你知道日本有一种现象叫老年离婚吗？\n很多全职太太退休后选择离婚，不是因为不爱了，是因为发现——\n干了一辈子家务，老了以后自己一分钱没有，还得看丈夫脸色花钱。\n\n她听完沉默了很久。\n\n【第二段 - 解决方案（2:00-3:30）】\n然后我跟她说了三件事。\n\n第一件：马上以灵活就业身份交职工社保，按60%档，每月大概800多，交15年到60岁。\n虽然时间紧，但能拿到一个基础养老金，每月至少1500-2000。\n\n第二件：买一份养老年金险。她现在45岁，每年交3万，交10年，共30万。\n60岁开始，每月领2300左右，活多久领多久。\n这笔钱只属于她自己，写进合同，谁也拿不走。\n\n第三件：用她这些年攒的私房钱，配一份增额寿。灵活取用，作为应急资金。\n\n三件事加起来，60岁以后她每个月有自己名下的4000+现金流。\n不多，但每一分都是她自己的。不需要张口，不需要感恩，不需要看脸色。\n\n【第三段 - 金句升华（3:30-4:30）】\n她听完哭了。不是难过，是松了一口气。\n她说：孟卉，我终于觉得，我老了以后还是个完整的人。\n\n我说：你就是。你一直是。只是这个系统没给你应得的。\n我能做的，就是用保险这个工具，帮你把应得的补回来。\n\n我见过太多全职妈妈，把一辈子给了家庭，老了却活成了寄人篱下。\n不是丈夫不好，是制度没有保护看不见的劳动。\n\n所以我现在逢人就说：不管你上不上班，一定要有自己的养老金。\n这不是不信任婚姻，这是给自己留最后的体面。\n\n【结尾 - 行动号召（4:30-5:00）】\n如果你也是全职妈妈，或者你身边有全职妈妈，把这条视频转给她。\n评论区留下：年龄+是否在工作，我帮你算一份属于你自己的养老方案。\n\n记住，你不是谁的附属品。你的晚年，应该由你自己说了算。\n\n我是孟卉，一个专门帮你算养老账的保险经纪人。关注我，下期见。","status":"todo","inToday":true},
+{"id":"t12","title":"如果没有想通以下几点，我劝你先别买商业养老金","type":"long","category":"反向营销","duration":"5min","hook":"一个卖养老金的保险经纪人，劝你别急着买。听起来矛盾，但这期可能帮你省几十万。","tags":["人设立","敢说真话","反向营销","养老金"],"script":"【开场 - 反向悬念（0:00-0:40）】\n我是孟卉，卖养老金的。\n但今天这期，我要劝你——先别买。\n\n不是矫情，不是欲擒故纵。\n是因为我见过太多人，没想清楚就冲进来，结果交了两年交不起，退保亏十几万。\n\n你是来买保障的，不是来给自己挖坑的。\n\n所以如果你正在考虑买商业养老金，先停下来，问自己四个问题。\n任何一个没想通，都先别买。\n\n【第一问：你有没有先把社保交上？（0:40-1:40）】\n我遇到过太多人，社保断断续续交着，甚至根本没交，就来问我商业养老金怎么买。\n\n我的回答永远是：先回去把社保交上。\n\n为什么？社保养老金是你能买到的最划算的基础保障，没有之一。\n国家补贴+统筹账户，回报率远超任何商业产品。\n你连这个地基都不打，就往上盖楼，楼会塌的。\n\n正确顺序是：社保打底 → 个人养老金税优 → 商业养老金补充。\n地基没打好就买商业保险，就像没学走就想跑——摔是早晚的事。\n\n如果你连社保都还没交明白，评论区扣社保，我帮你先把这个理清楚。\n\n【第二问：这笔钱未来5年你用不用得到？（1:40-2:40）】\n养老金是长期锁钱的工具，不是银行存款。\n一旦投进去，前几年退保会亏，这是铁律。\n\n所以你必须想清楚：这笔钱未来5到10年，你用不用得到？\n孩子学费？房贷？生意周转？父母医疗？\n\n如果答案是可能用得到——那就别买，或者少买。\n我宁可你每年只交5000块交20年，也不希望你年交5万交两年然后断供退保。\n\n我自己给客户做方案，第一个问题永远是：这笔钱确定不用了吧？\n如果客户犹豫了，我就把方案缩到他能承受的范围。\n\n这是规矩。因为养老金规划是马拉松，不是百米冲刺。你能跑到终点，比跑得多快重要一百倍。\n\n【第三问：你是为了收益买的，还是为了现金流？（2:40-3:40）】\n这个问题最关键，也最容易被带偏。\n\n如果你是为了收益高——别买养老金。\n同等的钱，基金定投、股票、甚至一些银行理财，长期收益都可能跑赢养老金。\n但你也得承受亏损的风险和波动的心累。\n\n养老金的核心价值不是收益，是确定性。\n它是唯一一个能给你活多久领多久终身现金流的工具。\n你不会因为市场暴跌少拿一分钱，也不会因为活太长寿担心钱花完。\n\n所以正确的问题不是收益多少，而是我老了以后，需不需要一笔雷打不动、每月准时到账的钱？\n\n如果你的答案是需要——那养老金就是为你准备的。\n如果你的答案是我要博收益——那养老金不是你的菜，别勉强。\n\n【第四问：你买的是产品还是方案？（3:40-4:30）】\n最后一个问题，也是我最想说的。\n\n很多人买养老金的过程是这样的：朋友圈看到某款产品→收益演示很漂亮→直接买了。\n\n但你买的不是一款产品，是你未来30年的养老方案。\n产品只是工具，方案才是灵魂。\n\n一个合格的养老方案，应该包含：\n你的年龄、收入、家庭结构、已有保障、退休目标……\n然后才能倒推出：你缺多少、怎么补、用什么产品补。\n\n直接买产品不规划，就像不看处方直接买药——可能有效，更可能吃出问题。\n\n我的建议是：不管你找不找我，买之前找一个靠谱的保险经纪人，帮你做一次完整的养老需求分析。\n不花一分钱，但能帮你少走三年弯路。\n\n【结尾 - 人设宣言（4:30-5:00）】\n四个问题问完了：\n社保交了没？这笔钱5年内用不用？要收益还是要现金流？买的是产品还是方案？\n\n任何一个没想通，先别买。\n\n有人可能觉得奇怪：你是卖养老金的，怎么劝人别买？\n\n因为我卖的不是产品，是让你老了以后有钱花的确定性。\n如果现在买会让你更焦虑、更紧张、更不安——那这单我不签。\n\n我是孟卉。想清楚了再来找我，我帮你做最适合你的养老方案。\n关注我，养老路上少走弯路。","status":"todo","inToday":true},
+{"id":"p1","title":"退休金不够？90%的人第一步就错了","type":"short","category":"反常识","duration":"60s","hook":"你以为退休金不够是因为存得少？大错特错！","tags":["养老规划","年金险","反常识"],"script":"【开头 - 反常识】\n你以为退休金不够，是因为你存得少？大错特错！\n\n【痛点展开】\n绝大多数人规划养老，第一步就走错了——他们盯着存多少钱，却忘了问怎么花。\n\n我给你们算笔账：同样是300万养老储备——\nA方案：存银行吃利息，按3%算，一年9万，每月7500。\nB方案：买养老年金，60岁开始，每月领1.5万，活多久领多久。\n\n区别在哪？A方案你永远在担心花完了怎么办，B方案你只需要想下个月又到账了。\n\n【金句收尾】\n养老的本质不是资产规模，是现金流的确定性。\n你存的不是钱，是老了以后的底气。\n\n👉 想知道你的年龄适合哪种方案？评论区留下：年龄+城市，我帮你算！","status":"pool","inToday":false},
+{"id":"p2","title":"给爸妈补缴养老保险，值不值？","type":"short","category":"算账型","duration":"55s","hook":"农村爸妈没养老金？一次性补缴到底划不划算，我帮你算清楚！","tags":["居民养老","补缴","算账"],"script":"【开头 - 场景代入】\n闺女，村里说可以一次性补缴养老保险，好几万呢，值不值啊？\n这是我上周收到的私信，今天就给你们彻底算清楚。\n\n【数据拆解】\n以山西为例：\n- 一次性补缴15年，最高档5000元/年，总共7.5万\n- 60岁后每月能领多少？基础养老金+个人账户≈800-1000元/月\n- 回本周期：7.5万÷900≈83个月≈7年\n\n也就是说，67岁以后领的都是净赚的。现在人均寿命78岁，你算算赚多少？\n\n【关键提醒】\n但！注意三个坑：\n1. 补缴没有政府补贴，每年正常交才有\n2. 各地基础养老金差异巨大，上海2400+，太原750\n3. 人走了个人账户余额可以继承，不会亏\n\n【行动号召】\n想给爸妈补缴的，评论区发：爸妈年龄+城市，我帮你算具体能领多少！","status":"pool","inToday":false},
+{"id":"p3","title":"全职妈妈，你的养老金在哪？","type":"short","category":"情感共鸣","duration":"50s","hook":"全职妈妈最怕的不是老公变心，是老了以后没有自己的钱。","tags":["全职妈妈","女性养老","情感"],"script":"【开头 - 扎心提问】\n全职妈妈最怕什么？\n不是老公变心，不是孩子不孝——是老了以后，没有一分钱是属于自己的。\n\n【痛点共鸣】\n你没有社保，没有工资流水，没有公积金。\n你为家庭付出了全部，但养老金体系不认这个账。\n你老公的退休金再高，那也是他的。万一……我不想说那个万一。\n\n【解决方案】\n三件事，现在就能做：\n1. 以灵活就业身份交社保养老，最低档也行，关键是有\n2. 买一份属于自己的养老年金，受益人写自己\n3. 哪怕每月500块，坚持20年，60岁开始每月能领1000+\n\n【金句】\n给自己买养老金，不是不信任婚姻，是给自己留一张底牌。\n爱别人的前提，是先爱自己。\n\n👉 全职妈妈们，评论区扣1，我帮你做一份专属养老方案。","status":"pool","inToday":false},
+{"id":"p4","title":"增额寿 vs 年金险，一张表说清楚","type":"short","category":"对比","duration":"65s","hook":"增额终身寿和养老年金，到底选哪个？今天一张表给你讲明白！","tags":["增额寿","年金险","对比"],"script":"【开头 - 直给答案】\n增额寿和年金险，是养老规划里被问最多的两个产品。\n今天不绕弯子，一张表给你讲清楚。\n\n【对比表格 - 口播版】\n先说增额寿：\n- 像一个会长大的存钱罐\n- 钱在里面复利增长，想用随时取\n- 缺点是：取完就没了，不保证终身\n\n再说年金险：\n- 像一个永远不关的水龙头\n- 到约定年龄，每月准时打钱\n- 缺点是：灵活性差，不能随便取\n\n【选择建议】\n- 40岁以下+不确定用途 → 增额寿\n- 40岁以上+明确养老用途 → 年金险\n- 两个都要？可以！各配一半，一个管灵活，一个管终身\n\n【行动号召】\n想知道你现在买哪个更划算？评论区：年龄+想解决的问题，我帮你选！","status":"pool","inToday":false},
+{"id":"p5","title":"养老金并轨后，体制内还香吗？","type":"short","category":"政策解读","duration":"55s","hook":"2024养老金并轨后，公务员的退休金还那么高吗？真相来了！","tags":["养老金并轨","体制内","政策"],"script":"【开头 - 热点切入】\n2024年10月，养老金并轨正式完成。\n很多人问：体制内的铁饭碗，还铁吗？\n\n【政策拆解】\n先说结论：依然比企业好，但差距在缩小。\n\n以前体制内不用交养老金，退休金按工资比例发，能到在职工资的80-90%。\n并轨后，他们也要每月扣8%交养老保险了，退休金计算方式和企业一样。\n\n但！体制内多了一个职业年金——单位和个人各交一部分，相当于多了一个补充账户。这才是真正的差距所在。\n\n【给你的启示】\n体制内的优势从不用交变成了多了一份职业年金。\n普通人怎么办？自己给自己建职业年金——商业养老年金就是你的职业年金。\n\n【金句】\n别羡慕别人的铁饭碗，给自己打造一个终身现金流，比任何铁饭碗都靠谱。","status":"pool","inToday":false},
+{"id":"p6","title":"30岁开始规划养老，早不早？","type":"short","category":"反常识","duration":"50s","hook":"30岁规划养老太早了？错！30岁才是黄金窗口期！","tags":["养老规划","复利","年轻人"],"script":"【开头 - 反常识】\n我才30岁，规划养老是不是太早了？\n这句话我听了100遍，每次都想说：等你觉得不早的时候，就晚了！\n\n【数据论证】\n同样想60岁每月领1万养老金：\n- 30岁开始：每月只需存2500，存30年\n- 40岁开始：每月要存4200，存20年\n- 50岁开始：每月要存10000+，存10年\n\n时间差10年，成本差一倍！这就是复利的威力。\n\n【核心观点】\n养老规划最好的时间是20年前，其次是现在。\n30岁不是太早，是刚刚好——你有时间让复利帮你工作。\n\n【行动号召】\n想知道你现在开始规划，60岁能领多少？评论区：年龄+每月能存多少，我帮你算！","status":"pool","inToday":false},
+{"id":"p7","title":"买养老金的3个黄金年龄","type":"short","category":"算账型","duration":"55s","hook":"买养老金有3个黄金年龄，错过了成本翻倍！","tags":["养老规划","购买时机","清单"],"script":"【开头 - 悬念】\n买养老金，时机比产品更重要。\n三个黄金年龄，错过一个成本翻一番。\n\n【清单展开】\n第一个黄金年龄：28-35岁\n优势：时间是你的朋友，复利效应最大化\n策略：小额长缴，每月500-1000就能锁定不错的养老金\n\n第二个黄金年龄：40-45岁\n优势：收入巅峰期，缴费能力强\n策略：大额中缴，每年3-5万，15-20年缴完\n\n第三个黄金年龄：50-55岁\n优势：目标明确，退休倒计时\n策略：趸交或短缴，一次性或3-5年缴完，快速锁定\n\n【警告】\n55岁以后不是不能买，但可选产品少，杠杆效应弱。\n越晚买，同样的养老金，你付出的成本越高。\n\n【行动号召】\n你处在哪个阶段？评论区：年龄，我告诉你最佳策略！","status":"pool","inToday":false},
+{"id":"p8","title":"分红险的底层逻辑，一次讲透","type":"short","category":"避坑指南","duration":"70s","hook":"分红险到底是不是坑？底层逻辑拆开了给你看！","tags":["分红险","底层逻辑","深度"],"script":"【开头 - 直面争议】\n分红险，保险界最受争议的产品。有人说它是坑，有人说它是宝。\n今天不站队，把底层逻辑拆开了给你看。\n\n【逻辑拆解】\n分红险的收益 = 保证部分 + 浮动分红\n保证部分：白纸黑字写进合同，保险公司必须给\n浮动分红：取决于保险公司的投资收益，不保证\n\n分红从哪来？三差：\n1. 死差：实际死亡率比预期低，省下的钱\n2. 费差：实际运营费用比预期低，省下的钱\n3. 利差：实际投资收益比预期高，多赚的钱\n\n【关键判断】\n分红险好不好，不看产品看公司。\n选分红险就是选保险公司——它的投资能力、分红实现率、历史业绩，才是你要研究的。\n\n【建议】\n想知道怎么查一家保险公司的分红实现率？评论区扣分红，我教你！","status":"pool","inToday":false},
+{"id":"p9","title":"延迟退休来了，你的养老金够吗？","type":"short","category":"热点追踪","duration":"55s","hook":"延迟退休方案落地！算完这笔账，我沉默了...","tags":["延迟退休","社保","热点"],"script":"【开头 - 热点】\n延迟退休方案逐步落地了。很多人只关心又要多干几年，却忽略了一个更要命的问题。\n\n【数据冲击】\n假设你65岁退休，活到85岁，退休生活20年。\n每月基本开销5000块（吃饭+水电+医疗），20年就是120万。\n这还不算通货膨胀、旅游、给孙辈红包。\n\n而你退休后能领多少社保养老金？\n目前全国平均替代率不到45%。如果你退休前月入1万，退休后每月只有4500。\n\n缺口：每月至少差500，20年差12万。这只是最低标准。\n\n【核心观点】\n延迟退休解决的是社保基金不够发的问题，不是你养老够不够的问题。\n你的养老，终究要靠你自己。\n\n【行动号召】\n想知道你退休后能领多少？评论区：当前月收入+所在城市，我帮你估算！","status":"pool","inToday":false},
+{"id":"p10","title":"给孩子的养老金，是最好的礼物","type":"short","category":"情感共鸣","duration":"50s","hook":"我给孩子买了一份养老金，不是因为我有钱，是因为我算了一笔账。","tags":["孩子养老","情感","复利"],"script":"【开头 - 个人故事】\n我给孩子买了一份养老金，很多人不理解——孩子才几岁，你给他买养老金？\n\n【情感共鸣】\n我算过一笔账：\n如果我60岁开始每月需要1万养老，存30年的话——\n30岁开始每月存2500，但我的孩子如果0岁开始，每月只需要存500。\n\n我用现在的500块，换他未来不用为养老焦虑的底气。\n这不叫有钱，这叫用时间的复利去爱他。\n\n【价值升华】\n我们这一代人，大概率是最后一代能给父母养老的，也是第一代需要自己给自己养老的。\n我不想让我的孩子重复这个循环。\n给他一份养老金，是我能想到的，最长情的礼物。\n\n【行动号召】\n想了解给孩子买养老金怎么操作？评论区扣孩子年龄，我帮你出方案。","status":"pool","inToday":false},
+{"id":"p11","title":"月入5000/1万/2万，分别该怎么规划养老？","type":"short","category":"方案型","duration":"55s","hook":"收入不同，养老策略完全不同。月入5000和月入2万的人，养老规划差了不止一个档次。","tags":["养老规划","分层策略","方案"],"script":"【开头】\n收入不同，养老策略完全不同。\n今天帮三个收入段的人，分别算清楚。\n\n【月入5000】\n目标：保证基本生活\n策略：社保必须交，最低档也要交。每月省出300-500，买一份小额的养老年金。\n60岁后：社保约1500 + 商保约800 = 2300/月。加上积蓄，基本够用。\n\n【月入1万】\n目标：体面退休\n策略：社保按实际基数交。每月省出1000-2000，配年金险+增额寿组合。\n60岁后：社保约3500 + 商保约2500 = 6000/月。可以偶尔旅游。\n\n【月入2万】\n目标：富足养老\n策略：社保+个人养老金12000+商保组合。每年3-5万投入商保。\n60岁后：社保约5000 + 商保约5000+ = 1万+/月。想怎么过怎么过。\n\n【核心逻辑】\n无论收入多少，养老规划的核心就一个字：早。\n收入低就用时间换，收入高就用金额换。\n\n👉 你月入多少？评论区告诉我，帮你算专属方案！","status":"pool","inToday":false},
+{"id":"p12","title":"90后独生子女的养老焦虑：上面4个老人下面1个孩子","type":"short","category":"情感共鸣","duration":"50s","hook":"90后最怕什么？不是房价，不是裁员，是四个老人同时生病。","tags":["独生子女","代际压力","情感"],"script":"【开头 - 群体共鸣】\n90后最怕什么？\n不是房价，不是35岁被裁。\n是四个老人，同时生病。\n\n【压力拆解】\n一个90后独生子女，未来要面对：\n- 上面4个老人（双方父母）\n- 下面1-2个孩子\n- 中间两个自己\n\n如果四个老人每人每月需要5000养老+医疗：\n4 × 5000 × 12 = 24万/年。\n再加上孩子的学费、房贷、生活开支……\n\n这不是压力，这是地雷阵。\n\n【解决方案】\n你现在能做的：\n1. 帮父母补社保、配医疗险，减轻未来负担\n2. 给自己买养老金，别让孩子重复你的困境\n3. 跟伴侣坦诚谈钱，别等出事才面对\n\n【金句】\n我们这一代，是最后一代给父母养老的，也是第一代不能指望孩子养老的。\n给自己存养老金，不是自私，是对孩子最大的爱。\n\n👉 90后们，评论区扣1，聊聊你的养老焦虑！","status":"pool","inToday":false},
+{"id":"p13","title":"存银行 vs 买理财 vs 买年金，30年差距有多大？","type":"short","category":"对比","duration":"60s","hook":"同样的钱放银行、买理财、买年金，30年后谁最多？结果太意外了！","tags":["对比","算账","养老规划"],"script":"【开头】\n同样100万，三种打理方式，30年后差距有多大？\n\n【方案对比】\n银行定存（2.5%复利）：30年后≈210万\n理财产品（假设4%复利）：30年后≈324万\n养老年金（30岁趸交，60岁开始领）：到85岁累计领≈290万+\n\n看起来理财收益最高？但等等——\n\n理财有波动、可能亏本金、需要你主动管理。\n年金是写进合同的保证收益，你啥也不用干，到日子自动到账。\n而且年金有长寿保护——活到90岁、100岁，继续领。\n\n【结论】\n银行保本但跑不赢通胀。\n理财收益高但不确定。\n年金收益中等但确定性最强。\n\n养老规划最怕的不是收益低，是不确定。\n你老了以后需要的不是可能赚更多，而是一定不会少。\n\n👉 你更看重收益还是确定性？评论区聊聊！","status":"pool","inToday":false},
+{"id":"p14","title":"为什么我不推荐返还型保险？","type":"short","category":"避坑指南","duration":"50s","hook":"有病治病没病返本，这句话骗了多少人？今天拆开看。","tags":["返还型保险","避坑","观点"],"script":"【开头 - 直击套路】\n有病治病，没病返本。\n这句话你听过吗？保险销售最经典的套路之一。\n\n【拆解】\n返还型保险的逻辑：\n你每年多交一笔钱，保险公司拿去投资。\n合同到期，如果没理赔，多交的钱+一点收益返还给你。\n\n听起来不错？但算笔账：\n同样保额50万的重疾险——\n消费型：每年3000\n返还型：每年8000\n\n多交的5000元/年，30年就是15万。\n到期返还你15万+一点收益，大概18-20万。\n\n但你把这5000元/年自己做理财，按3%复利，30年后是多少？\n是23万+。\n\n保险公司赚的就是这个差额。\n\n【建议】\n保险就是保险，理财就是理财。别混在一起。\n消费型保险+自己做理财，性价比远高于返还型。\n\n👉 你买过返还型保险吗？评论区聊聊体验！","status":"pool","inToday":false},
+{"id":"p15","title":"银行利率又降了！钱存银行还划算吗？","type":"short","category":"热点追踪","duration":"50s","hook":"存款利率一降再降，3年期定存跌破2%？你的钱越来越不值钱了！","tags":["利率下行","养老规划","热点"],"script":"【开头 - 热点】\n又降了。银行存款利率，今年以来已经降了不止一次。\n3年期定存已经跌到2%左右，活期几乎等于零。\n\n【数据冲击】\n100万存银行，按2%算，一年利息2万。\n但通胀呢？实际购买力在缩水。\n30年后这100万的实际购买力，大概只相当于现在的50-60万。\n\n【你的钱去哪了？】\n低利率时代，存银行=慢性缩水。\n但普通人又没有更好的投资渠道——\n股市怕亏、基金怕套、P2P怕雷。\n\n所以养老年金这种锁定长期利率的工具，价值就凸显了。\n它能锁定你当下的利率水平，对抗未来持续降息的风险。\n\n👉 你现在的存款主要放哪？评论区聊聊，我帮你分析！","status":"pool","inToday":false}
+];
+
+// ========== STATE ==========
+var tab = 'today';
+var cat = 'all', tag = 'all';
+var filtered = [];
+
+var TABS = [
+  {id:'today',icon:'📅',label:'今日'},
+  {id:'pool',icon:'📚',label:'备选池'},
+  {id:'history',icon:'📜',label:'已拍'},
+  {id:'all',icon:'🗂',label:'全部'}
+];
+
+var CATS = ['全部','热点追踪','政策解读','算账型','对比','情感共鸣','避坑指南','方案型','反常识','人设立','冷知识','故事驱动','反向营销'];
+var TAGS = ['全部','养老规划','年金险','社保','增额寿','分红险','养老金','女性养老','热点','算账','复利','信任'];
+
+// ========== STORAGE ==========
+function saveState() {
+  var states = {};
+  SCRIPTS.forEach(function(s){ states[s.id] = {status:s.status, inToday:s.inToday}; });
+  try { localStorage.setItem('mh_v3_states', JSON.stringify(states)); } catch(e){}
+}
+function loadState() {
+  try {
+    var raw = localStorage.getItem('mh_v3_states');
+    if (!raw) return;
+    var states = JSON.parse(raw);
+    SCRIPTS.forEach(function(s){
+      if (states[s.id]) { s.status = states[s.id].status; s.inToday = states[s.id].inToday; }
+    });
+  } catch(e){}
+}
+
+// ========== RENDER ==========
+function $(id){ return document.getElementById(id); }
+
+function init() {
+  loadState();
+
+  var now = new Date();
+  $('hdDate').innerHTML = now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日<br>星期'+'日一二三四五六'[now.getDay()];
+
+  // Bottom nav
+  $('nvBar').innerHTML = TABS.map(function(t){
+    return '<div class="ni'+(t.id===tab?' on':'')+'" onclick="switchTab(\''+t.id+'\')"><span class="ni-i">'+t.icon+'</span>'+t.label+'</div>';
+  }).join('');
+
+  // Category chips
+  $('catCh').innerHTML = CATS.map(function(c){
+    var v = c==='全部'?'all':c;
+    return '<span class="ch-i'+((v===cat)?' on':'')+'" onclick="setCat(\''+v+'\')">'+c+'</span>';
+  }).join('');
+
+  // Tag chips
+  $('tagCh').innerHTML = TAGS.map(function(t){
+    var v = t==='全部'?'all':t;
+    return '<span class="ch-i'+((v===tag)?' on':'')+'" onclick="setTag(\''+v+'\')">'+t+'</span>';
+  }).join('');
+
+  $('srInp').addEventListener('input', function(){ doFilter(); });
+  doFilter();
+}
+
+function doFilter() {
+  var search = $('srInp').value.toLowerCase();
+  var list = SCRIPTS.slice();
+
+  if (tab === 'today') list = list.filter(function(s){return s.inToday;});
+  else if (tab === 'pool') list = list.filter(function(s){return s.status==='pool';});
+  else if (tab === 'history') list = list.filter(function(s){return s.status==='done'||s.status==='pending';});
+
+  if (cat !== 'all') list = list.filter(function(s){return s.category.indexOf(cat)>=0;});
+  if (tag !== 'all') list = list.filter(function(s){return s.tags.some(function(t){return t.indexOf(tag)>=0;});});
+  if (search) list = list.filter(function(s){
+    return s.title.toLowerCase().indexOf(search)>=0 || s.hook.toLowerCase().indexOf(search)>=0 || s.script.toLowerCase().indexOf(search)>=0 || s.tags.some(function(t){return t.toLowerCase().indexOf(search)>=0;});
+  });
+
+  filtered = list;
+  renderList();
+  renderStats();
+}
+
+function renderStats() {
+  var pool=0, todo=0, done=0, pending=0;
+  var todayShort=0, todayLong=0, shortDone=0, longDone=0;
+  SCRIPTS.forEach(function(s){
+    if(s.status==='pool')pool++;
+    if(s.status==='todo')todo++;
+    if(s.status==='done')done++;
+    if(s.status==='pending')pending++;
+    if(s.inToday){
+      if(s.type==='short'){todayShort++; if(s.status==='done')shortDone++;}
+      else{todayLong++; if(s.status==='done')longDone++;}
+    }
+  });
+
+  $('stRow').innerHTML =
+    '<div class="st-i"><div class="st-v" style="color:var(--p)">'+pool+'</div><div class="st-l">📚备选池</div></div>'+
+    '<div class="st-i"><div class="st-v" style="color:var(--g)">'+todo+'</div><div class="st-l">⏳待拍</div></div>'+
+    '<div class="st-i"><div class="st-v" style="color:#2e7d32">'+done+'</div><div class="st-l">✅已拍</div></div>'+
+    '<div class="st-i"><div class="st-v" style="color:var(--a)">'+pending+'</div><div class="st-l">📤待发</div></div>';
+
+  $('pgRow').innerHTML =
+    '<div class="pg-r"><span class="pg-l">📱短视频</span><div class="pg-b"><div class="pg-f" style="width:'+(todayShort?Math.round(shortDone/todayShort*100):0)+'%;background:var(--p)"></div></div><span class="pg-n">'+shortDone+'/'+todayShort+'</span></div>'+
+    '<div class="pg-r"><span class="pg-l">🎬长视频</span><div class="pg-b"><div class="pg-f" style="width:'+(todayLong?Math.round(longDone/todayLong*100):0)+'%;background:var(--g)"></div></div><span class="pg-n">'+longDone+'/'+todayLong+'</span></div>';
+}
+
+function renderList() {
+  var el = $('lsEl');
+  $('ctEl').textContent = '共 '+filtered.length+' 条';
+  if (!filtered.length) { el.innerHTML = '<div class="em2"><div class="ei">📭</div>暂无内容</div>'; return; }
+
+  el.innerHTML = filtered.map(function(s){
+    var ck = (s.status==='done'||s.status==='pending')?' d':'';
+    var tb = s.type==='short'?'<span class="bg bs">📱短视频</span>':'<span class="bg bl">🎬长视频</span>';
+    var sb = '';
+    if(s.status==='done') sb='<span class="bg bd">✅已拍</span>';
+    if(s.status==='pending') sb='<span class="bg bd">📤待发</span>';
+    if(s.status==='pool') sb='<span class="bg bp">📚备选</span>';
+
+    var act = '';
+    if(s.status==='pool') act='<button class="ab" onclick="event.stopPropagation();toggleToday(\''+s.id+'\',true)">📅</button>';
+    else if(s.status==='todo') act='<button class="ab" onclick="event.stopPropagation();toggleToday(\''+s.id+'\',false)">📚</button>';
+
+    return '<div class="it" onclick="openModal(\''+s.id+'\')">'+
+      '<div class="it-t">'+
+        '<div class="ck'+ck+'" onclick="event.stopPropagation();cycleStatus(\''+s.id+'\')"></div>'+
+        '<div class="it-i">'+
+          '<div class="it-tt">'+s.title+' '+sb+'</div>'+
+          '<div class="it-hk">'+s.hook+'</div>'+
+          '<div class="it-m">'+tb+'<span class="mt">⏱'+s.duration+'</span><span class="mt">'+s.category+'</span>'+
+            s.tags.slice(0,2).map(function(t){return '<span class="mt">#'+t+'</span>';}).join(' ')+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="it-a">'+act+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+// ========== ACTIONS ==========
+function switchTab(t) {
+  tab = t;
+  document.querySelectorAll('.ni').forEach(function(el,i){ el.classList.toggle('on', TABS[i].id===t); });
+  doFilter();
+}
+
+function setCat(c) {
+  cat = c;
+  document.querySelectorAll('#catCh .ch-i').forEach(function(el){
+    var v = el.textContent==='全部'?'all':el.textContent;
+    el.classList.toggle('on', v===c);
+  });
+  doFilter();
+}
+
+function setTag(t) {
+  tag = t;
+  document.querySelectorAll('#tagCh .ch-i').forEach(function(el){
+    var v = el.textContent==='全部'?'all':el.textContent;
+    el.classList.toggle('on', v===t);
+  });
+  doFilter();
+}
+
+function cycleStatus(id) {
+  var s = SCRIPTS.find(function(x){return x.id===id;});
+  if(!s || s.status==='pool') return;
+  s.status = s.status==='todo'?'done':s.status==='done'?'pending':'todo';
+  saveState();
+  toast({done:'✅ 已完成',pending:'📤 待发送',todo:'🔄 待拍摄'}[s.status]);
+  doFilter();
+}
+
+function toggleToday(id, inToday) {
+  var s = SCRIPTS.find(function(x){return x.id===id;});
+  if(!s) return;
+  s.inToday = inToday;
+  s.status = inToday?'todo':'pool';
+  saveState();
+  toast(inToday?'📅 已加入今日':'📚 已移入备选');
+  doFilter();
+}
+
+function openModal(id) {
+  var s = SCRIPTS.find(function(x){return x.id===id;});
+  if(!s) return;
+
+  var acts = '<button class="bn bp2" onclick="copyScript(\''+id+'\')">📋 复制口播稿</button>';
+  if(s.status==='todo') acts += '<button class="bn bo2 bs2" onclick="cycleStatus(\''+id+'\');closeModal()">✅ 标记完成</button>';
+  if(s.status==='todo') acts += '<button class="bn bo2 bs2" onclick="toggleToday(\''+id+'\',false);closeModal()">📚 移入备选</button>';
+  if(s.status==='pool') acts += '<button class="bn bo2 bs2" onclick="toggleToday(\''+id+'\',true);closeModal()">📅 加入今日</button>';
+  acts += '<button class="bn bo2 bs2" onclick="exportToday()">📤 导出口播稿</button>';
+
+  $('mmBox').innerHTML =
+    '<div class="mh"><div class="mt2">'+s.title+'</div><button class="mc" onclick="closeModal()">×</button></div>'+
+    '<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">'+
+      '<span class="bg '+(s.type==='short'?'bs':'bl')+'">'+(s.type==='short'?'📱短视频':'🎬长视频')+'</span>'+
+      '<span class="mt">⏱'+s.duration+'</span><span class="mt">'+s.category+'</span>'+
+    '</div>'+
+    '<div class="mbd">'+s.script+'</div>'+
+    '<div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap">'+s.tags.map(function(t){return '<span class="bg bs">#'+t+'</span>';}).join(' ')+'</div>'+
+    '<div class="ma">'+acts+'</div>';
+
+  $('mmMask').classList.add('s');
+}
+
+function closeModal() { $('mmMask').classList.remove('s'); }
+
+function copyScript(id) {
+  var s = SCRIPTS.find(function(x){return x.id===id;});
+  if(!s) return;
+  var ta = document.createElement('textarea');
+  ta.value = s.script; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);
+  toast('📋 口播稿已复制！');
+}
+
+function exportToday() {
+  var today = SCRIPTS.filter(function(s){return s.inToday;});
+  var text = '=== 卖保险的孟卉 · 今日口播稿 ===\n\n';
+  today.forEach(function(s,i){ text += '--- '+(i+1)+'. '+s.title+' ('+s.duration+') ---\n'+s.script+'\n\n'; });
+  var blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = '孟卉口播稿.txt'; a.click();
+  URL.revokeObjectURL(url);
+  toast('📋 口播稿已导出！');
+}
+
+function toast(msg) {
+  var el = $('tsEl');
+  el.textContent = msg; el.classList.add('s');
+  setTimeout(function(){ el.classList.remove('s'); }, 2000);
+}
+
+// Click outside modal to close
+$('mmMask').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+
+// Start
+init();
+</script>
+</body>
+</html>
