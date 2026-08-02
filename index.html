@@ -174,7 +174,7 @@
   .em2{text-align:center; padding:36px 20px; color:var(--sub);}
   .em2 .ei{font-size:36px; margin-bottom:6px;}
 
-  /* ===== 今日代办模块样式 ===== */
+  /* ===== 今日待办模块样式 ===== */
   .todo-add{display:flex; gap:8px; margin:14px 0 6px;}
   .todo-add input{flex:1; border:1px solid var(--line); border-radius:11px; padding:12px 14px; font-size:14px; outline:none; background:var(--card);}
   .todo-add input:focus{border-color:var(--brand);}
@@ -230,7 +230,7 @@
   <div class="mtabs" id="mtabs">
     <button class="mtab on" data-tab="moments">📱 朋友圈</button>
     <button class="mtab" data-tab="video">🎬 视频号</button>
-    <button class="mtab" data-tab="todo">✅ 今日代办</button>
+    <button class="mtab" data-tab="todo">✅ 今日待办</button>
   </div>
 </header>
 
@@ -310,10 +310,10 @@
     <div class="ls" id="lsEl"></div>
   </section>
 
-  <!-- ===================== 第三部分：今日代办 ===================== -->
+  <!-- ===================== 第三部分：今日待办 ===================== -->
   <section class="tabpane" id="tab-todo">
     <div class="alert install">
-      <b>✅ 今日代办：</b> 这是<b>你自己能改</b>的清单——添加、删除、勾选完成、点 ✏️ 改文字都行，数据存在本机、按天自动重置。<b>不用找我覆盖，随时在页面里编辑。</b>
+      <b>✅ 今日待办：</b> 这是<b>你自己能改</b>的清单——添加、删除、勾选完成、点 ✏️ 改文字都行，数据存在本机、按天自动重置。<b>不用找我覆盖，随时在页面里编辑。</b>
     </div>
     <div class="todo-add">
       <input type="text" id="todoInput" placeholder="添加今日待办，回车即可" maxlength="120" />
@@ -953,7 +953,7 @@ function exportVToday(){
 }
 $id('mmMask').addEventListener('click', function(e){ if(e.target===this) closeVModal(); });
 
-/* ===================== 第三部分：今日代办（页面内可编辑） ===================== */
+/* ===================== 第三部分：今日待办（页面内可编辑） ===================== */
 const TODO_KEY = 'mh_todo_v1';
 let todoState = loadTodo();
 function loadTodo(){
@@ -973,7 +973,7 @@ function initTodo(){
   $id('todoAdd').addEventListener('click', addTodo);
   $id('todoInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addTodo(); });
   $id('todoReset').addEventListener('click', ()=>{
-    if(confirm('确定清空今日所有代办？')){ todoState.items=[]; saveTodo(); renderTodo(); }
+    if(confirm('确定清空今日所有待办？')){ todoState.items=[]; saveTodo(); renderTodo(); }
   });
   setInterval(()=>{ // 跨天自动重置
     if(todoState.date !== todayKey()){ todoState = {date:todayKey(), items:[]}; saveTodo(); renderTodo(); }
@@ -1016,7 +1016,7 @@ function renderTodo(){
   $id('todoTotal').textContent = total;
   $id('todoDone').textContent = done;
   if(todoState.date !== todayKey()){ todoState.date = todayKey(); saveTodo(); }
-  if(!total){ ul.innerHTML = '<div class="todo-empty">今天还没有代办，上面输入框添加一条吧 ✍️</div>'; return; }
+  if(!total){ ul.innerHTML = '<div class="todo-empty">今天还没有待办，上面输入框添加一条吧 ✍️</div>'; return; }
   ul.innerHTML = todoState.items.map(it=>
     '<li id="todo-'+it.id+'">'+
       '<div class="t-check '+(it.done?'d':'')+'" onclick="toggleTodoItem(\''+it.id+'\')"></div>'+
