@@ -4,43 +4,74 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#e8523a">
-<title>孟卉的朋友圈 · 真人版</title>
+<title>孟卉的朋友圈工作台 · 每日发布</title>
 <style>
   :root{
     --p:#e8523a;--a:#d63031;--g:#f0932b;--bg:#fff5f2;--card:#fff;
-    --t:#2c2c2c;--tl:#9a9a9a;--bd:#fce4dc;--sb:env(safe-area-inset-bottom,0px)
+    --t:#2c2c2c;--tl:#9a9a9a;--bd:#fce4dc;--sb:env(safe-area-inset-bottom,0px);
+    --ok:#2e9e5b;--okb:#eefaf1
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-    background:var(--bg);color:var(--t);line-height:1.75;
-    padding:calc(20px + env(safe-area-inset-top,0px)) 15px calc(40px + var(--sb))}
-  header{position:sticky;top:0;z-index:5;background:var(--bg);
-    padding:6px 2px 12px;margin-bottom:6px}
-  .ttl{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px}
-  .ttl h1{font-size:21px;font-weight:800;letter-spacing:-.3px}
+    background:var(--bg);color:var(--t);line-height:1.72;
+    padding:calc(16px + env(safe-area-inset-top,0px)) 14px calc(40px + var(--sb))}
+  header{position:sticky;top:0;z-index:20;background:var(--bg);padding:8px 2px 10px}
+  .ttl{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+  .ttl h1{font-size:19px;font-weight:800}
   .ttl h1 .dot{color:var(--p)}
   .date{font-size:12px;color:var(--tl)}
-  .sub{font-size:12.5px;color:var(--tl);margin-top:3px}
-  .bar{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
-  .bar .hint{font-size:12px;color:var(--tl)}
-  .swap{background:var(--p);color:#fff;border:none;border-radius:20px;
-    padding:8px 16px;font-size:13px;font-weight:600;box-shadow:0 4px 12px rgba(232,82,58,.25)}
-  .swap:active{transform:scale(.96)}
-  main{display:flex;flex-direction:column;gap:14px;margin-top:4px}
-  .post{background:var(--card);border-radius:18px;padding:16px 16px 12px;
-    border:1px solid var(--bd);box-shadow:0 4px 16px rgba(232,82,58,.06)}
-  .post .tag{display:inline-block;font-size:11px;color:var(--p);
-    background:#fce4dc;padding:2px 9px;border-radius:10px;margin-bottom:9px}
-  .post .txt{font-size:15.5px;white-space:pre-wrap;word-break:break-word}
-  .post .shot{display:flex;align-items:center;gap:6px;margin-top:11px;
-    font-size:12.5px;color:var(--tl);background:var(--bg);
-    padding:8px 11px;border-radius:10px;border:1px dashed var(--bd)}
-  .post .acts{display:flex;justify-content:flex-end;margin-top:10px}
-  .copy{background:none;border:1px solid var(--bd);color:var(--p);
-    border-radius:16px;padding:6px 14px;font-size:12.5px;font-weight:600}
-  .copy:active{background:#fce4dc}
-  .copy.ok{color:#2e9e5b;border-color:#bfe9cf;background:#eefaf1}
-  footer{margin-top:26px;text-align:center;color:var(--tl);font-size:11.5px;line-height:1.8}
+  .sub{font-size:12px;color:var(--tl);margin-top:2px}
+  .remind-btn{background:var(--p);color:#fff;border:none;border-radius:18px;
+    padding:7px 14px;font-size:12.5px;font-weight:600;box-shadow:0 4px 12px rgba(232,82,58,.25)}
+  .remind-btn:active{transform:scale(.96)}
+  .remind-btn.on{background:#fff;color:var(--p);border:1px solid var(--p)}
+
+  .idea{margin-top:11px;background:var(--card);border:1px solid var(--bd);border-radius:14px;
+    padding:11px 12px}
+  .idea label{font-size:12.5px;color:var(--p);font-weight:600}
+  .idea textarea{width:100%;border:none;resize:none;font-size:13.5px;margin-top:6px;
+    font-family:inherit;color:var(--t);background:transparent;outline:none;line-height:1.6}
+  .idea .row{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+  .idea .save{background:var(--bd);color:var(--p);border:none;border-radius:14px;
+    padding:6px 14px;font-size:12.5px;font-weight:600}
+  .idea .hint{font-size:11.5px;color:var(--tl)}
+
+  .timeline{margin-top:13px;display:flex;flex-direction:column;gap:0}
+  .tl-item{display:flex;align-items:flex-start;gap:10px;padding:7px 2px}
+  .tl-dot{width:9px;height:9px;border-radius:50%;background:var(--bd);margin-top:6px;flex-shrink:0}
+  .tl-item.done .tl-dot{background:var(--ok)}
+  .tl-item.now .tl-dot{background:var(--p);box-shadow:0 0 0 4px rgba(232,82,58,.18)}
+  .tl-time{font-size:12px;color:var(--tl);width:38px;flex-shrink:0;font-variant-numeric:tabular-nums}
+  .tl-label{font-size:13px}
+  .tl-item.done .tl-label{color:var(--ok);text-decoration:line-through;opacity:.7}
+  .tl-item.now .tl-label{color:var(--p);font-weight:600}
+
+  main{display:flex;flex-direction:column;gap:13px;margin-top:14px}
+  .post{background:var(--card);border-radius:16px;padding:14px 14px 10px;
+    border:1px solid var(--bd);box-shadow:0 4px 14px rgba(232,82,58,.05);position:relative}
+  .post.flash{animation:flash 1.4s ease}
+  @keyframes flash{0%,100%{box-shadow:0 4px 14px rgba(232,82,58,.05)}
+    30%{box-shadow:0 0 0 3px rgba(232,82,58,.4);border-color:var(--p)}}
+  .post .slot{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .post .tag{font-size:11px;color:var(--p);background:#fce4dc;padding:2px 9px;border-radius:9px}
+  .post .st{font-size:11px;color:var(--tl)}
+  .post .st.sent{color:var(--ok)}
+  .post img{width:100%;border-radius:11px;margin:9px 0 3px;display:block;max-height:240px;object-fit:cover;background:var(--bg)}
+  .post .txt{font-size:15px;white-space:pre-wrap;word-break:break-word;margin-top:4px}
+  .post .shot{font-size:12px;color:var(--tl);margin-top:8px;padding:7px 10px;
+    background:var(--bg);border-radius:9px;border:1px dashed var(--bd)}
+  .post .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:9px}
+  .post button{border-radius:15px;padding:6px 13px;font-size:12.5px;font-weight:600;background:none}
+  .copy{border:1px solid var(--bd);color:var(--p)}
+  .copy.ok{color:var(--ok);border-color:#bfe9cf;background:var(--okb)}
+  .sent-btn{border:1px solid var(--okb);color:var(--ok);background:var(--okb)}
+  .sent-btn.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+
+  footer{margin-top:24px;text-align:center;color:var(--tl);font-size:11px;line-height:1.8}
+  .toast{position:fixed;left:50%;top:20%;transform:translateX(-50%);
+    background:var(--t);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;
+    z-index:99;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -49,161 +80,257 @@
     <h1>孟卉的朋友圈<span class="dot">.</span></h1>
     <span class="date" id="date"></span>
   </div>
-  <div class="sub">从你的真实生活里长出来的 · 每天几条，挑着发</div>
-  <div class="bar">
-    <span class="hint">挑一条你今天想发的 →</span>
-    <button class="swap" onclick="swap()">换一批 ↻</button>
+  <div class="sub">每日发布系统 · 早感悟 / 直播预告 / 午吃 / 下午硬核×2 / 晚碎片</div>
+  <div style="margin-top:9px;display:flex;gap:8px;align-items:center">
+    <button class="remind-btn" id="remindBtn" onclick="toggleRemind()">开启提醒</button>
+    <span class="hint" style="font-size:11.5px;color:var(--tl)" id="remindHint">非整点温柔提醒，打开页面才生效</span>
+  </div>
+
+  <div class="idea">
+    <label>💡 今天有什么想法？（会融入明天早晨的感悟）</label>
+    <textarea id="ideaInput" rows="2" placeholder="比如：今天想到客户王姐那个案例…写下，明天早晨的朋友圈会用上"></textarea>
+    <div class="row">
+      <span class="hint" id="ideaHint">本地保存，仅此设备</span>
+      <button class="save" onclick="saveIdea()">保存想法</button>
+    </div>
   </div>
 </header>
+
+<div class="timeline" id="timeline"></div>
 
 <main id="feed"></main>
 
 <footer>
-  内容全部基于你的真实生活（董教练 · 99 · 锵锵/图图/胡啦/黑煤球）<br>
-  不是模板，是你的日子。
+  内容基于你的真实生活（董教练·康复教练 / 99·董冬冬 / 锵锵·图图·胡啦·黑煤球）<br>
+  每天打开本页，按提醒节奏发圈，形成正向循环。
 </footer>
 
+<div class="toast" id="toast"></div>
+
 <script>
-// ===== 真实素材库（来自孟卉的真实生活）=====
-// 家庭：董教练（小9岁的老公，康复教练，在一起13年）、儿子99（大名董冬冬，2024.3.9生，两岁半）
+// ===== 真实素材库（孟卉的真实生活）=====
+// 老公：董教练（小9岁，康复教练，在一起13年）
+// 儿子：99（大名董冬冬，2024.3.9生，两岁半）
 // 宠物：边牧锵锵11岁 / 史宾格图图10岁 / 柯基胡啦7岁 / 玳瑁猫黑煤球12岁
-// 工作：保险12年，泰康(2015.3)→明亚(2021)，每天直播讲养老+更视频号
-// 状态：孟卉230斤、爱做饭(因为爱吃)、省钱记账中、爱读书但不想被贴标签、狼人杀/麻将、不爱运动
+// 自己：孟卉230斤、爱做饭、省钱记账、读书但不立人设、狼人杀麻将、不爱运动
+// 工作：保险12年，泰康(2015.3)→明亚(2021)，每天9点直播讲养老基础逻辑
 
-const POSTS = [
-  {tag:"带99", t:"99今天突然会叫“狗狗”了，然后追着胡啦满屋跑。七岁的柯基跑不过两岁半小孩，急得直哼哧，图图在旁边看戏。", shot:"拍一张99追胡啦的背影，糊点也没事"},
-  {tag:"带99", t:"半夜两点99醒了哭，董教练迷迷糊糊爬起来哄，我在旁边听着，忽然觉得在一起13年这事，好像也没那么长了。", shot:"拍董教练抱99的侧面，昏黄夜灯那种"},
-  {tag:"带99", t:"今天给99做辅食，锵锵蹲旁边眼巴巴看着。11岁的老边牧了，还跟小孩较劲。我说你吃你的进口粮，他不听。", shot:"拍锵锵蹲99饭桌旁的馋样"},
-  {tag:"带99", t:"99把黑煤球的尾巴当拔浪鼓拽，猫忍了，没挠。12年的老猫，脾气是真好，可能也是看在是一家的份上。", shot:"拍99和黑煤球同框，哪怕虚了也行"},
-  {tag:"带99", t:"带99去公园，别的妈妈聊早教，我聊养老金。职业病，改不了，但也不想改。", shot:"拍99在草地上跑，远处虚掉的背景"},
-  {tag:"带99", t:"99今天第一次自己用勺子，糊了半张脸。董教练在旁边录像，笑得手抖。这种事，记一辈子。", shot:"拍99花猫脸特写"},
-  {tag:"带99", t:"今天99发烧，董教练比我还慌。小9岁的老公，慌起来像个大孩子，但递毛巾换毛巾一样没落下。靠谱。", shot:"拍体温计+董教练乱糟糟的背影"},
-  {tag:"带99", t:"带99累的时候想，13年前我哪想过自己会成这样。但看着99和狗睡一块儿，又觉得，成这样也挺好。", shot:"拍99和某只狗同框午睡"},
-
-  {tag:"宠物", t:"图图今天又偷了我一块吐司，10岁的史宾格了，偷吃手法越来越稳，连声儿都不带出。", shot:"拍图图无辜坐着的表情"},
-  {tag:"宠物", t:"胡啦（柯基）又胖了。七岁了还跟小时候一样贪吃，董教练说这狗随我。我否认，但没完全否认。", shot:"拍胡啦圆屁股背影，柯基精髓"},
-  {tag:"宠物", t:"黑煤球今天趴在99的爬爬垫上晒太阳，一猫一99，各睡各的，互不打扰。家里最安静的画面。", shot:"拍黑煤球和99并排睡"},
-  {tag:"宠物", t:"锵锵老了，不爱跑楼梯了，每天就趴门口看我们忙进忙出。11年，它陪我从泰康到明亚，从一个人到一大家。", shot:"拍锵锵趴门口望向屋里的背影"},
-  {tag:"宠物", t:"四只毛孩子里，图图最黏99。99一哭它就凑过去闻，史宾格的共情能力，绝了。", shot:"拍图图凑近99的脸"},
-  {tag:"宠物", t:"锵锵今天不肯下楼，11岁了关节不好。我背它下了一层，它回头舔我手。老伙计，谢谢你陪我这么久。", shot:"拍背锵锵下楼的瞬间"},
-  {tag:"宠物", t:"黑煤球12岁了，还是那么高冷，但每晚必来我脚边睡。猫的爱，含蓄，但准时。", shot:"拍黑煤球窝脚边的日常"},
-  {tag:"宠物", t:"图图今天把胡啦的狗粮偷吃了，柯基气得追它转圈。家里每天都有戏，不用买票。", shot:"拍两只狗追逐的糊图"},
-
-  {tag:"夫妻", t:"和董教练在一起13年了。他小我9岁，当年多少人觉得不行。现在他带99比我稳，吵架让着我，饭也做得了。", shot:"拍两人的合照，不用精修"},
-  {tag:"夫妻", t:"今天和董教练打麻将，他输给我二十块，嘴硬说让我的。姐弟恋的好处之一：哄人这事儿他一直在线。", shot:"拍麻将桌一角+赢牌的手"},
-  {tag:"夫妻", t:"董教练今天学99叫“妈妈”，我俩笑到99都懵了。小9岁的老公，有时候也像一个需要哄的大99。", shot:"拍董教练逗99的笑脸"},
-  {tag:"夫妻", t:"结婚13年最大的体会：找个人过日子，比找个人谈恋爱难，但也值太多。", shot:"拍两人背影散步，99在中间"},
-  {tag:"夫妻", t:"和董教练复盘带99分工，他说他负责陪玩我负责记账。13年，我们慢慢找到了最舒服的节奏。", shot:"拍记账本+董教练带99同框"},
-  {tag:"夫妻", t:"今天董教练说“你做保险12年，我陪你13年”。哎，这小子，偶尔也挺会说话的。", shot:"拍董教练认真的侧脸"},
-
-  {tag:"省钱", t:"又开始记账了。上个月花超了，这个月自己做饭，第一天就省了四十多。钱这种东西，记着记着就明白了。", shot:"拍记账本某一页，字迹真实点"},
-  {tag:"省钱", t:"路过以前的甜品店，没进去。不是不爱吃了，是现在觉得这钱能给孩子买罐奶粉。省钱这事儿，当了妈之后突然就通了。", shot:"拍甜品店橱窗，自己在外的影子"},
-  {tag:"省钱", t:"今天记账发现，光外卖就花了快五百。明天起，自己做饭。爱吃的人做饭，其实不痛苦。", shot:"拍冰箱里囤的菜"},
-  {tag:"省钱", t:"和董教练说好这个月紧缩。他问那狼人杀还打不，我说打，但不点外卖了。省钱不等于不过日子。", shot:"拍狼人杀App界面或牌"},
-  {tag:"省钱", t:"记账第N天。发现钱都花在狗粮和99的尿不湿上了。两个碎钞机，一个毛的一个肉的，都爱。", shot:"拍狗粮袋+尿不湿堆一起"},
-  {tag:"省钱", t:"今天忍住没买那件外套。回家做了顿好的，算下来比买衣服开心。省钱之后，快乐变简单了。", shot:"拍自己做的那顿饭"},
-
-  {tag:"做饭", t:"今天做了葱油拌面，董教练和99都爱吃。爱吃的人做饭，图的就是这口，别人说香，自己更香。", shot:"拍葱油拌面特写，热气腾腾"},
-  {tag:"做饭", t:"尝试给99做手指食物，翻车了，最后还是我吃了。做饭的快乐有时候在于——反正也是我吃。", shot:"拍翻车现场+我吃的碗"},
-  {tag:"做饭", t:"周末炖了锅汤，四只狗围着我转。家里热闹，比啥都踏实。爱做饭，大概也是爱这种热闹。", shot:"拍汤锅+脚边转的狗"},
-  {tag:"做饭", t:"今天研究了一道新菜，翻车一半，但董教练说好吃。爱做饭的人，最容易被这种话哄到，也不丢人。", shot:"拍那道不太完美但暖的菜"},
-  {tag:"做饭", t:"给99做辅食剩下的胡萝卜，我炒了盘自己吃。不浪费，也不亏待自己。一个人吃饭也要香。", shot:"拍那盘胡萝卜，简简单单"},
-
-  {tag:"直播", t:"今天直播讲养老金，9点开播，讲到嘴干。但有个姐姐说“听你讲终于懂了”，值了。12年，就为这几句“懂了”。", shot:"拍直播画面截图/支架上的手机"},
-  {tag:"直播", t:"做保险第12年。从泰康代理人到明亚经纪人，最大的变化是：不再推销，改帮人算账。账算清了，人心就定了。", shot:"拍你对着纸笔算账的手"},
-  {tag:"直播", t:"今天一个客户问我“你图啥”，我说图你老了能按月领钱不慌。干这行，真诚比话术管用，12年验证过。", shot:"拍和客户聊天的微信截图(打码)"},
-  {tag:"直播", t:"直播久了发现，大家不是不爱听养老，是没人用大白话说。我每天就干这事儿——把复杂说成人话。", shot:"拍直播间标题页"},
-  {tag:"直播", t:"今天被拒了，第N次。12年里被拒太多次，但每次还是有点失落。正常，第二天接着播。", shot:"拍空荡的直播间或夜路"},
-  {tag:"直播", t:"客户签完单说“早听你的就好了”。干保险12年，这句话比佣金暖。", shot:"拍签约页/握手照"},
-  {tag:"直播", t:"视频号每天更，有时候拍到半夜。但看到有人留言“你讲的我听懂了”，就还想更。", shot:"拍手机剪辑界面/深夜台灯"},
-  {tag:"直播", t:"今天给一个姐姐算养老账，她算完沉默了。我说别慌，现在开始就来得及。这行，算清楚比说漂亮话有用。", shot:"拍算账的草稿纸"},
-
-  {tag:"休闲", t:"昨晚狼人杀，我拿预言家，首夜就被刀。气得我复盘了半小时。不服老不行，但心态还年轻，认了。", shot:"拍狼人杀App战绩页"},
-  {tag:"休闲", t:"周末和董教练打麻将，赢了一百二。他说我手气随我妈。姐弟恋的日常：赢钱比赢架重要。", shot:"拍麻将桌+赢的钱"},
-  {tag:"休闲", t:"又翻了本书，看到一句好的就拍下来。但我真不想被人觉得是个“爱读书的人”。可能就是单纯想自己偷着乐。", shot:"拍书的一页+你的手"},
-  {tag:"休闲", t:"不爱运动，但狼人杀能让我坐三小时不动。也算一种“静止的运动”吧，主打一个不动脑外的专注。", shot:"拍坐着打游戏的松弛感"},
-  {tag:"休闲", t:"狼人杀又被票出局，气不过拉董教练复盘。他听得一脸懵，但陪我聊到凌晨。陪，比懂重要。", shot:"拍深夜聊天的影子"},
-  {tag:"休闲", t:"麻将桌上认识的朋友，比职场认识的还久。不打不相识，真的，牌品见人品。", shot:"拍老麻将搭子的合照"},
-
-  {tag:"碎碎念", t:"今天啥也没干，就陪99和狗过了一天。有时候这种“没干啥”的日子，反而最喘得过气。真人版朋友圈，大概就是发这种。", shot:"拍沙发上99和狗瘫着的画面"},
-  {tag:"碎碎念", t:"生活就是：一边省钱记账，一边给狗买进口粮。priorities，懂的都懂，不懂的……狗也不懂。", shot:"拍狗粮袋+记账本同框"},
-  {tag:"碎碎念", t:"13年，三只狗一只猫一个99，还有一个小我9岁的老公。我这一家子，乱，但完整。", shot:"拍全家福氛围的合影"},
-  {tag:"碎碎念", t:"不爱运动，每天陪99遛狗算我的运动量。步数过万，但没出汗，这应该不算吧，算了不算。", shot:"拍遛狗路上的影子"},
-  {tag:"碎碎念", t:"有时候觉得，一家五口（算上毛孩子）挤在一起，比什么豪宅都舒坦。日子是过给自己的。", shot:"拍家里某个热闹角落"},
-  {tag:"碎碎念", t:"今天没什么特别的事，就挺好。朋友圈不一定非要有什么意思，记下来，就是意思。", shot:"拍窗外/一杯水之类的安静画面"},
-
-  {tag:"康复教练", t:"董教练是做康复的，专业纠正姿势那种。回家把我坐姿、走路姿势全管了，连99学站他都用那套。姐弟恋的代价之一：家里有个行走的康复老师。", shot:"拍董教练纠正99站姿的侧影"},
-  {tag:"康复教练", t:"董教练今天给我做拉伸，边按边念叨“你这肌肉太紧了”。230斤的肉，确实紧。但他按完，腰真松了。", shot:"拍居家拉伸的随意一角"},
-  {tag:"康复教练", t:"99学走路，董教练用康复手法教，比我还较真。看一大一小较劲，忽然觉得，专业的人干专业的事，连带娃都省心。", shot:"拍董教练扶99学步"},
-
-  {tag:"230斤", t:"230斤的我，减肥flag倒了又立。但今天忍住没点外卖、自己做了饭，算赢了一局。省钱和减肥，今天是同一条战线。", shot:"拍自己做的减脂餐"},
-  {tag:"230斤", t:"不爱运动，但230斤这个数字提醒我该动了。先从每天遛四只狗开始，步数过万，就当运动了，自我安慰很有效。", shot:"拍遛狗路上的影子"},
-  {tag:"230斤", t:"今天称了下，还是230斤。不焦虑，反正董教练说健康不是看秤，是看状态。被专业人士安慰，挺好。", shot:"拍体重秤（可选不打脸）"},
-
-  {tag:"带99", t:"99大名董冬冬，小名99。董教练起的，说九九归一、长长久久。两岁半的小男孩，天天把家里闹成天宫。", shot:"拍99大笑的糊脸特写"},
-  {tag:"带99", t:"99今天第一次自己喊“爸爸”，董教练比谁都激动。康复教练也有被儿子一句话击中的时候。", shot:"拍董教练抱99笑的样子"}
+const MORNING = [
+  "做保险第12年，最近总在想一个问题：我们到底是在卖产品，还是在帮人接住未来的自己。越往后越觉得，是后者。",
+  "复盘这段时间接触的客户，发现大家不是不想规划养老，是被一堆术语吓退了。我这行最大的价值，可能就是把话说明白。",
+  "今天翻了翻12年前的工牌，泰康的。从代理人到明亚经纪人，变的不是身份，是不再急着成交，改成先帮人算账。",
+  "有个客户跟我说“等孩子大了再买”，我当场没劝。但心里记着：养老这件事，等，是最贵的成本。",
+  "最近直播讲养老基础逻辑，评论区有人打“早听懂就好了”。其实不早，现在就是最早的时候。",
+  "做这行越久，越怕那种“我朋友说不用买”的对话。不是反对，是很多人连自己啥情况都没搞清楚就被劝退了。",
+  "99最近总学我拿手机讲“养老”，童言童语。也许他长大后，保险早不是现在这个样子了。但“提前打算”这件事，不会过时。",
+  "董教练说我看客户比看他认真。我想了想，可能职业病——但认真帮人算清楚，总没错。",
+  "今天复盘一个被拒的单子。不是产品问题，是我没讲透“为什么是现在”。下次，从时间价值讲起。",
+  "230斤的我坐在镜头前讲养老，有人私信“你不像卖保险的”。我说对，我更像是个怕你老了慌的人。"
 ];
 
-function mulberry32(a){
-  return function(){
-    a |= 0; a = a + 0x6D2B79F5 | 0;
-    let t = Math.imul(a ^ a >>> 15, 1 | a);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  }
-}
+const LIVE = [
+  "今天9点直播，不讲产品，讲养老的基础逻辑：年轻时的钱，怎么稳稳流到老。想搞懂自己老了有没有底的，来。",
+  "9点直播预告：延迟退休之下，你的养老金到底够不够？我拿真实测算跟你算。不唬人，只算账。",
+  "明天9点直播，主题：复利这个东西，为什么保险公司比你会用。基础逻辑类，听懂不吃亏。",
+  "9点直播，专讲一个被忽略的真相——社保养老金，和你以为的可能不一样。基础逻辑，小白也能听。"
+];
 
-let salt = 0;
-function todayKey(){
-  const d = new Date();
-  return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
-}
-function pick(seed){
-  const rng = mulberry32(seed);
-  const arr = POSTS.slice();
-  for(let i=arr.length-1;i>0;i--){
-    const j = Math.floor(rng()*(i+1));
-    [arr[i],arr[j]] = [arr[j],arr[i]];
-  }
-  return arr.slice(0,5);
-}
-function render(list){
+const NOON = [
+  "今天中午做了番茄牛腩，99在旁边馋得直拍餐椅。230斤的我少盛了点，但汤喝了两碗。家常饭，最养人。",
+  "中午一个人吃饭，给自己煮了碗面。董教练带99去康复了，家里突然安静。这种安静，也挺好。",
+  "今天尝试少油版红烧肉，居然成功了。省钱期也能吃好，关键是不糊弄自己。",
+  "中午董教练回来，说想吃我做的饺子。和面、调馅、99在旁边玩面团。一家三口（加四脚）的厨房，热闹但踏实。",
+  "记账第N天，今天午饭成本12块，比外卖省30。省钱不等于吃差，自己做的，香。",
+  "中午炖了排骨汤，四只狗围着我转。图图最精，知道我心软先给它的。家里这些毛孩子，比闹钟准时。",
+  "今天中午简单，蒸蛋+青菜。230斤在控，但蛋白质得够。健康这事儿，从一顿饭开始较真。",
+  "董教练做了康复餐给我，低卡但好吃。康复教练的厨艺，意外在线。中午这顿，是被爱投喂的一顿。"
+];
+
+const HARD = [
+  "养老金替代率这词听着玄，说人话就是：你退休前赚1万，退休后社保大概给你4千。剩下6千的窟窿，谁填？",
+  "复利不是魔法，是时间。25岁每月存500，和35岁每月存1000，老了差出一辆车的钱。早，就是便宜。",
+  "锁定利率这四个字，现在是保险最值钱的功能。银行利率往下走，它能把你现在的利率焊死。",
+  "很多人问“我有社保还买商业养老干嘛”。社保是地板，商业养老是你自己加的地毯。光地板，冬天脚冷。",
+  "延迟退休不是让你多上几年班，是让你领钱的时间往后推、交钱的时间往前拉。算下来，缺口更大了。",
+  "风险这东西，不发生的时候叫“运气好”，发生的时候叫“全家扛”。保险就是把“全家扛”变成“提前分担”。",
+  "增额寿和年金，区别就一句：一个你随时能取（灵活），一个到点才发（专款）。看你怕乱花还是怕不够。",
+  "30岁和50岁买养老，差的不是一倍保费，是你能让钱滚的时间。后者保费贵，还滚得短。",
+  "“等有钱了再规划”——等的时候，钱在贬值，人在变老，窗口在关。规划不是有钱人的专利，是年轻人的杠杆。",
+  "通胀会吃掉现金，但吃不掉“锁定长期的现金流”。养老拼的不是你现在有多少，是老了每个月稳不稳。",
+  "一个真实测算：现在每月存1000买养老年金，60岁起每月能领约2000+，活到老领到老。这就是“反脆弱”。",
+  "别被“收益低”劝退。养老的钱，第一诉求是“一定在”，不是“涨得快”。确定性，本身就是高收益。"
+];
+
+const NIGHT = [
+  "睡前循环一首老歌，歌词写“平凡的日子，也要发光”。今天没干啥大事，但陪99和狗过了一天，也算发光吧。",
+  "今晚翻到书里一句：真正的安稳，是你自己心里有底。没记书名，但这句话，留给今天。",
+  "分享一首歌。副歌那句“慢慢来，比较快”，刚好是今天直播讲养老的感觉——别急，但别停。",
+  "睡前读了几页书，有句话戳我：人这辈子，最贵的投资是“提前安排”。不标出处，但这句我认。",
+  "今天循环一首很老的歌，关于回家。董教练带99睡了，我听着歌收拾厨房，日子松散但完整。",
+  "分享一首安静的歌。歌词讲“平凡最浪漫”。230斤的我，平凡地过了今天，也挺浪漫。",
+  "睡前翻书，看到一句关于“慢”的：慢下来，才看得见自己。今天直播讲了3小时，睡前这10分钟，才是我的。",
+  "分享一首歌，关于光。今天被客户一句“听你讲懂了”暖到，像歌里那束光。你懂那种感觉就行。",
+  "今晚读书没看完，但一句记住了：钱是工具，不是目的。做保险12年，越做越信这句。",
+  "睡前一首歌，唱的是“明天会更好”。99明天又长大一点，董教练的康复课排满了，我的直播明天9点——都挺好。"
+];
+
+// 时段配置（非整点提醒）
+const SLOTS = [
+  {key:"MORNING", label:"早晨感悟", time:"08:23", pool:MORNING, kw:"sunrise,morning,light", shot:"拍一张清晨窗边/第一缕光，或用下方配图"},
+  {key:"LIVE",    label:"直播预告", time:"08:47", pool:LIVE,    kw:"microphone,live,stage", shot:"截一张直播间封面/你举着手机准备开播"},
+  {key:"NOON",    label:"中午吃什么", time:"12:31", pool:NOON,  kw:"homecooking,food,warm", shot:"拍今天的午饭，热气腾腾那种"},
+  {key:"HARD1",   label:"下午硬核①", time:"14:42", pool:HARD,   kw:"idea,lightbulb,think", shot:"拍一张纸笔算账的手/或你直播时的认真脸"},
+  {key:"HARD2",   label:"下午硬核②", time:"16:37", pool:HARD,   kw:"chess,strategy,plan", shot:"拍你翻条款/做笔记的桌面"},
+  {key:"NIGHT",   label:"睡前碎片", time:"22:48", pool:NIGHT,   kw:"book,night,cozy", shot:"拍睡前一盏灯/一本书/耳机，松弛感"}
+];
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+function dayKey(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
+function pick(pool,seed){const rng=mulberry32(seed);return pool[Math.floor(rng()*pool.length)]}
+
+// 状态
+let sent = {};
+function loadSent(){try{sent=JSON.parse(localStorage.getItem('pyq_sent_'+dayKey())||'{}')}catch(e){sent={}}}
+function saveSent(){localStorage.setItem('pyq_sent_'+dayKey(),JSON.stringify(sent))}
+
+function getIdea(){return localStorage.getItem('pyq_idea')||''}
+
+function buildCards(){
+  const dk = dayKey();
   const feed = document.getElementById('feed');
-  feed.innerHTML = '';
-  list.forEach((p,idx)=>{
-    const el = document.createElement('div');
-    el.className = 'post';
+  feed.innerHTML='';
+  SLOTS.forEach((s,idx)=>{
+    let txt = pick(s.pool, dk*7 + idx*131 + (s.key==='HARD2'?97:0));
+    if(s.key==='MORNING'){
+      const idea=getIdea();
+      if(idea.trim()) txt = '今天复盘时想到：'+idea.trim()+'\n\n'+txt;
+    }
+    const seed = dk + idx*17;
+    const img = 'https://loremflickr.com/600/400/'+s.kw+'?lock='+seed;
+    const isSent = sent[s.key];
+    const el=document.createElement('div');
+    el.className='post'; el.id='post-'+s.key;
     el.innerHTML =
-      '<span class="tag">'+p.tag+'</span>'+
-      '<div class="txt">'+p.t+'</div>'+
-      '<div class="shot">📷 '+p.shot+'</div>'+
-      '<div class="acts"><button class="copy" onclick="copyPost(this,'+idx+')">复制文案</button></div>';
+      '<div class="slot"><span class="tag">'+s.label+' · '+s.time+'</span>'+
+        '<span class="st '+(isSent?'sent':'')+'" id="st-'+s.key+'">'+(isSent?'已发 ✓':'待发')+'</span></div>'+
+      '<img src="'+img+'" alt="" onerror="this.style.display=\'none\'">'+
+      '<div class="txt">'+txt+'</div>'+
+      '<div class="shot">📷 '+s.shot+'</div>'+
+      '<div class="acts">'+
+        '<button class="copy" id="cp-'+s.key+'" onclick="copyPost(\''+s.key+'\')">复制文案</button>'+
+        '<button class="sent-btn '+(isSent?'on':'')+'" id="sb-'+s.key+'" onclick="markSent(\''+s.key+'\')">'+(isSent?'取消已发':'标记已发')+'</button>'+
+      '</div>';
     feed.appendChild(el);
   });
 }
-function copyPost(btn,idx){
-  const txt = POSTS.find(p=>p.t===document.querySelectorAll('.post .txt')[idx].textContent).t;
-  navigator.clipboard.writeText(txt).then(()=>{
-    btn.textContent='已复制 ✓'; btn.classList.add('ok');
-    setTimeout(()=>{btn.textContent='复制文案'; btn.classList.remove('ok');},1500);
-  }).catch(()=>{
-    // 兜底
+
+function copyPost(key){
+  const el=document.querySelector('#post-'+key+' .txt');
+  const txt=el.textContent;
+  navigator.clipboard.writeText(txt).then(ok).catch(()=>{
     const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);
-    ta.select();document.execCommand('copy');document.body.removeChild(ta);
-    btn.textContent='已复制 ✓'; btn.classList.add('ok');
-    setTimeout(()=>{btn.textContent='复制文案'; btn.classList.remove('ok');},1500);
+    ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();
+  });
+  function ok(){const b=document.getElementById('cp-'+key);b.textContent='已复制 ✓';b.classList.add('ok');
+    setTimeout(()=>{b.textContent='复制文案';b.classList.remove('ok')},1500)}
+}
+function markSent(key){
+  sent[key]=!sent[key]; saveSent();
+  const st=document.getElementById('st-'+key), sb=document.getElementById('sb-'+key);
+  st.textContent=sent[key]?'已发 ✓':'待发'; st.classList.toggle('sent',sent[key]);
+  sb.classList.toggle('on',sent[key]); sb.textContent=sent[key]?'取消已发':'标记已发';
+  renderTimeline();
+}
+
+function renderTimeline(){
+  const now=new Date();
+  const cur=now.getHours()*60+now.getMinutes();
+  const tl=document.getElementById('timeline'); tl.innerHTML='';
+  SLOTS.forEach(s=>{
+    const [h,m]=s.time.split(':').map(Number);
+    const t=h*60+m;
+    const done=sent[s.key];
+    const isNow=!done && cur>=t-2 && cur<=t+30;
+    const cls='tl-item'+(done?' done':'')+(isNow?' now':'');
+    const item=document.createElement('div');
+    item.className=cls;
+    item.innerHTML='<span class="tl-dot"></span><span class="tl-time">'+s.time+'</span>'+
+      '<span class="tl-label">'+(done?'✓ ':'')+s.label+'</span>';
+    tl.appendChild(item);
   });
 }
-function swap(){
-  salt++;
-  render(pick(todayKey() + salt*7919));
+
+// ===== 提醒系统 =====
+let remindOn=false, reminded={}, timer=null, audioCtx=null;
+function toggleRemind(){
+  if(!remindOn){
+    if('Notification' in window && Notification.permission==='default'){
+      Notification.requestPermission().then(p=>{ if(p!=='granted') toast('已开启页面内提醒（系统通知未授权）'); });
+    }
+    remindOn=true; document.getElementById('remindBtn').textContent='提醒已开';
+    document.getElementById('remindBtn').classList.add('on');
+    document.getElementById('remindHint').textContent='到点会弹提醒+响铃，保持本页打开';
+    toast('提醒已开启 · 保持本页打开即可');
+    tick(); timer=setInterval(tick,20000);
+  }else{
+    remindOn=false; clearInterval(timer);
+    document.getElementById('remindBtn').textContent='开启提醒';
+    document.getElementById('remindBtn').classList.remove('on');
+    document.getElementById('remindHint').textContent='非整点温柔提醒，打开页面才生效';
+  }
 }
+function beep(){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.connect(g);g.connect(audioCtx.destination);
+    o.frequency.value=880;o.type='sine';
+    g.gain.setValueAtTime(0.001,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25,audioCtx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.5);
+    o.start();o.stop(audioCtx.currentTime+0.5);
+  }catch(e){}
+}
+function tick(){
+  if(!remindOn) return;
+  const now=new Date(); const cur=now.getHours()*60+now.getMinutes();
+  SLOTS.forEach(s=>{
+    const [h,m]=s.time.split(':').map(Number); const t=h*60+m;
+    const key=dayKey()+s.key;
+    if(!sent[s.key] && !reminded[key] && cur>=t && cur<=t+3){
+      reminded[key]=true;
+      beep();
+      const post=document.getElementById('post-'+s.key);
+      if(post){post.classList.remove('flash');void post.offsetWidth;post.classList.add('flash');
+        post.scrollIntoView({behavior:'smooth',block:'center'});}
+      if('Notification' in window && Notification.permission==='granted'){
+        new Notification('该发朋友圈啦 · '+s.label, {body:s.time+' 该发：'+s.label});
+      }
+      toast('⏰ '+s.time+' 该发：'+s.label);
+    }
+  });
+  renderTimeline();
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// 想法保存
+function saveIdea(){
+  const v=document.getElementById('ideaInput').value;
+  localStorage.setItem('pyq_idea',v);
+  document.getElementById('ideaHint').textContent=v.trim()?'已保存 ✓ 明天早晨感悟会用上':'本地保存，仅此设备';
+  toast('想法已保存');
+}
+
 function init(){
-  const d = new Date();
-  const wk = ['日','一','二','三','四','五','六'][d.getDay()];
-  document.getElementById('date').textContent =
-    (d.getMonth()+1)+'月'+d.getDate()+'日 周'+wk;
-  render(pick(todayKey()));
+  const d=new Date(); const wk=['日','一','二','三','四','五','六'][d.getDay()];
+  document.getElementById('date').textContent=(d.getMonth()+1)+'月'+d.getDate()+'日 周'+wk;
+  document.getElementById('ideaInput').value=getIdea();
+  loadSent(); buildCards(); renderTimeline();
+  setInterval(renderTimeline,60000);
 }
 init();
 </script>
